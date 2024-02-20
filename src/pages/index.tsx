@@ -1,5 +1,4 @@
 import Head from "next/head";
-import { UserButton } from "@clerk/clerk-react";
 
 import { api } from "~/utils/api";
 import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
@@ -23,11 +22,6 @@ export default function Home() {
           {!!user.isSignedIn && <SignOutButton />}
         </div>
         <SignIn path="/sign-in" routing="path" signUpUrl="/sign-up" />
-        <div>Your home page's content can go here.</div>
-
-        {/* <p className="text-2xl text-white">
-            {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-          </p> */}
       </main>
     </>
   );
