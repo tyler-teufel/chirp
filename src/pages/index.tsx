@@ -1,7 +1,8 @@
 import { SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import Head from "next/head";
+import { type NextPage } from "next";
 
-import { api } from "~/utils/api";
+import { RouterOutputs, api } from "~/utils/api";
 
 const CreatePostWizard = () => {
   const { user } = useUser();
@@ -22,11 +23,21 @@ const CreatePostWizard = () => {
     </div>
   );
 };
+type PostWithUser = RouterOutputs["posts"]["getAll"][number];
 
-export default function Home() {
+const PostView = (props: PostWithUser) => {
+  const { post, author } = props;
+  return (
+    <div key={post.id} className="border-b border-slate-400 p-8">
+      {post.content}
+    </div>
+  );
+};
+// export default function Home() {
+const Home: NextPage = () => {
   const user = useUser();
 
-  const { data, isLoading } = api.post.getAll.useQuery();
+  const { data, isLoading } = api.posts.getAll.useQuery();
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -50,14 +61,14 @@ export default function Home() {
             {user.isSignedIn && <CreatePostWizard />}
           </div>
           <div className="flex flex-col">
-            {[...data, ...data]?.map((post) => (
-              <div key={post.id} className="border-b border-slate-400 p-8">
-                {post.content}
-              </div>
+            {[...data, ...data]?.map((fullPost) => (
+              <PostView {...fullPost} key={fullPost.post.id} />
             ))}
           </div>
         </div>
       </main>
     </>
   );
-}
+};
+
+export default Home;
